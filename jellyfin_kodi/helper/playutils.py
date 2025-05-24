@@ -463,33 +463,65 @@ class PlayUtils(object):
             ],
         }
 
-        if settings("transcodeHi10P.bool"):
+        transcode_hi10p = settings("transcodeHi10P.bool")
+        transcode_h265_rext = settings("transcode_h265_rext.bool")
+        transcode_interlaced = settings("transcode_interlaced.bool")
+
+        if transcode_hi10p or transcode_interlaced:
+            conditions = []
+
+            if transcode_hi10p:
+                conditions.append(
+                    {
+                        "Condition": "LessThanEqual",
+                        "Property": "VideoBitDepth",
+                        "Value": "8",
+                    }
+                )
+
+            if transcode_interlaced:
+                conditions.append(
+                    {
+                        "Condition": "NotEquals",
+                        "Property": "IsInterlaced",
+                        "Value": "true",
+                    }
+                )
+
             profile["CodecProfiles"].append(
                 {
                     "Type": "Video",
                     "codec": "h264",
-                    "Conditions": [
-                        {
-                            "Condition": "LessThanEqual",
-                            "Property": "VideoBitDepth",
-                            "Value": "8",
-                        }
-                    ],
+                    "Conditions": conditions,
                 }
             )
 
-        if settings("transcode_h265_rext.bool"):
+        if transcode_h265_rext or transcode_interlaced:
+            conditions = []
+
+            if transcode_h265_rext:
+                conditions.append(
+                    {
+                        "Condition": "EqualsAny",
+                        "Property": "VideoProfile",
+                        "Value": "main|main 10",
+                    }
+                )
+
+            if transcode_interlaced:
+                conditions.append(
+                    {
+                        "Condition": "NotEquals",
+                        "Property": "IsInterlaced",
+                        "Value": "true",
+                    }
+                )
+
             profile["CodecProfiles"].append(
                 {
                     "Type": "Video",
                     "codec": "hevc",
-                    "Conditions": [
-                        {
-                            "Condition": "EqualsAny",
-                            "Property": "VideoProfile",
-                            "Value": "main|main 10",
-                        }
-                    ],
+                    "Conditions": conditions,
                 }
             )
 

@@ -1024,3 +1024,7 @@ msgstr "Remote Path"
 msgctxt "#33207"
 msgid "Local Path"
 msgstr "Local Path"
+
+msgctxt "#33208"
+msgid "Transcode interlaced video"
+msgstr "Transcode interlaced video"
